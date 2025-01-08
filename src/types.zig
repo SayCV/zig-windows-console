@@ -18,8 +18,8 @@ const virtual_keys = v: {
 
         i += 1;
     }
-
-    break :v &vks;
+    const final = vks;
+    break :v &final;
 };
 
 pub const VirtualKey = struct {
