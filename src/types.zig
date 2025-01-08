@@ -7,13 +7,13 @@ const virtual_keys = v: {
 
     var i: usize = 0;
     var vks = [_]VirtualKey{std.mem.zeroes(VirtualKey)} ** (std.mem.count(u8, list, "\n") + 1);
-    var lines = std.mem.split(u8, list, "\n");
+    var lines = std.mem.splitSequence(u8, list, "\n");
 
     while (lines.next()) |line| {
-        var line_vals = std.mem.split(u8, line, " ");
+        var line_vals = std.mem.splitSequence(u8, line, " ");
 
-        var symbol = line_vals.next().?;
-        var value = std.mem.trim(u8, line_vals.next().?, &std.ascii.spaces);
+        const symbol = line_vals.next().?;
+        const value = std.mem.trim(u8, line_vals.next().?, &std.ascii.whitespace);
         vks[i] = .{ .symbol = symbol, .value = std.fmt.parseInt(u16, value, 10) catch @compileError("bruh") };
 
         i += 1;
@@ -47,11 +47,11 @@ pub const VirtualKey = struct {
     }
 };
 
-pub const Coords = struct { x: i16, y: i16 };
+pub const Coords = extern struct { x: i16, y: i16 };
 
-pub const Rect = struct { left: i16, top: i16, right: i16, bottom: i16 };
+pub const Rect = extern struct { left: i16, top: i16, right: i16, bottom: i16 };
 
-pub const ScreenBufferInfo = struct {
+pub const ScreenBufferInfo = extern struct {
     size: Coords,
     cursor_position: Coords,
     attributes: u16,

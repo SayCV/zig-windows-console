@@ -90,7 +90,12 @@ pub const ConsoleApp = struct {
                 else => |err| return windows.unexpectedError(err),
             }
         }
-
-        return @bitCast(types.ScreenBufferInfo, bf);
+        return types.ScreenBufferInfo{
+            .size = @bitCast(bf.dwSize),
+            .cursor_position = @bitCast(bf.dwCursorPosition),
+            .attributes = @bitCast(bf.wAttributes),
+            .viewport_rect = @bitCast(bf.srWindow),
+            .max_window_size = @bitCast(bf.dwMaximumWindowSize),
+        };
     }
 };
