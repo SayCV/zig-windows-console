@@ -78,7 +78,7 @@ pub const ConsoleApp = struct {
         return Event.fromInputRecord(input_record);
     }
 
-    pub fn getEventNb(self: Self) !?Event {
+    pub fn getEventNb(self: Self) !Event {
         var event_count: u32 = 0;
         var input_record = std.mem.zeroes(c.INPUT_RECORD);
 
@@ -91,7 +91,7 @@ pub const ConsoleApp = struct {
 
         // If no events are available, return null
         if (event_count == 0) {
-            return null;
+            return Event{ .focus = false };
         }
 
         // Read the input event
