@@ -78,6 +78,33 @@ pub const ConsoleApp = struct {
         return Event.fromInputRecord(input_record);
     }
 
+    pub fn getEventNb(self: Self) !?Event {
+        var event_count: u32 = 0;
+        var input_record = std.mem.zeroes(c.INPUT_RECORD);
+
+        // Check if there are any input events available
+        if (c.PeekConsoleInputW(self.stdin_handle, &input_record, 1, &event_count) == 0) {
+            switch (windows.kernel32.GetLastError()) {
+                else => |err| return windows.unexpectedError(err),
+            }
+        }
+
+        // If no events are available, return null
+        if (event_count == 0) {
+            return null;
+        }
+
+        // Read the input event
+        if (c.ReadConsoleInputW(self.stdin_handle, &input_record, 1, &event_count) == 0) {
+            switch (windows.kernel32.GetLastError()) {
+                else => |err| return windows.unexpectedError(err),
+            }
+        }
+
+        // Return the event
+        return Event.fromInputRecord(input_record);
+    }
+
     pub fn viewportCoords(self: Self, coords: types.Coords, viewport_rect: ?types.Rect) !types.Coords {
         return types.Coords{ .x = coords.x, .y = coords.y - (viewport_rect orelse (try self.getScreenBufferInfo()).viewport_rect).top };
     }

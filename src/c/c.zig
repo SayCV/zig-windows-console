@@ -77,3 +77,10 @@ pub extern "kernel32" fn ReadConsoleInputW(
     nLength: windows.DWORD,
     lpNumberOfEventsRead: *windows.DWORD,
 ) windows.BOOL;
+
+pub extern "kernel32" fn PeekConsoleInputW(
+    hConsoleInput: windows.HANDLE,
+    lpBuffer: PINPUT_RECORD,
+    nLength: windows.DWORD,
+    lpNumberOfEventsRead: *windows.DWORD,
+) windows.BOOL;
