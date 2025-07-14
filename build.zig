@@ -1,19 +1,40 @@
-const Builder = @import("std").build.Builder;
+const std = @import("std");
+const Builder = std.Build;
 
 pub fn build(b: *Builder) void {
     const target = b.standardTargetOptions(.{});
-    const mode = b.standardReleaseOptions();
+    const optimize = b.standardOptimizeOption(.{});
 
-    var main_demo = b.addExecutable("events", "examples/events.zig");
+    const lib_mod = b.createModule(.{
+        .root_source_file = b.path("src/main.zig"),
+        .target = target,
+        .optimize = optimize,
+    });
 
-    main_demo.setTarget(target);
-    main_demo.setBuildMode(mode);
+    const main_mod = b.createModule(
+        .{
+            .target = target,
+            .root_source_file = b.path("examples/events.zig"),
+            .optimize = optimize,
+            //.version = .{ .major = version.major, .minor = version.minor, .patch = version.patch },
+        },
+    );
+    main_mod.addImport("zwc", lib_mod);
 
-    main_demo.linkSystemLibrary("kernel32");
-    main_demo.addPackagePath("zwc", "src/main.zig");
-    main_demo.install();
+    const lib = b.addLibrary(.{
+        //.linkage = .static,
+        .name = "zwc",
+        .root_module = lib_mod,
+    });
+    b.installArtifact(lib);
 
-    const run_cmd = main_demo.run();
+    const main_demo = b.addExecutable(.{
+        .name = "test",
+        .root_module = main_mod,
+    });
+    b.installArtifact(main_demo);
+
+    const run_cmd = b.addRunArtifact(main_demo);
     run_cmd.step.dependOn(b.getInstallStep());
     if (b.args) |args| {
         run_cmd.addArgs(args);
