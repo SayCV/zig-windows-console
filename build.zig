@@ -5,7 +5,7 @@ pub fn build(b: *Builder) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
-    const lib_mod = b.createModule(.{
+    const lib_mod = b.addModule("zwc", .{
         .root_source_file = b.path("src/main.zig"),
         .target = target,
         .optimize = optimize,

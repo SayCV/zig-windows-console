@@ -7,8 +7,8 @@ pub const WINDOW_BUFFER_SIZE_EVENT = 0x0004;
 pub const MENU_EVENT = 0x0008;
 pub const FOCUS_EVENT = 0x0010;
 
-pub extern fn GetConsoleOutputCP() c_uint;
-pub extern fn SetConsoleOutputCP(wCodePageID: c_uint) windows.BOOL;
+//pub extern fn GetConsoleOutputCP() c_uint;
+//pub extern fn SetConsoleOutputCP(wCodePageID: c_uint) windows.BOOL;
 
 pub extern fn SetConsoleMode(hConsoleHandle: windows.HANDLE, dwMode: windows.DWORD) windows.BOOL;
 pub extern fn GetConsoleMode(hConsoleHandle: windows.HANDLE, lpMode: *windows.DWORD) windows.BOOL;
@@ -76,11 +76,11 @@ pub extern "kernel32" fn ReadConsoleInputW(
     lpBuffer: PINPUT_RECORD,
     nLength: windows.DWORD,
     lpNumberOfEventsRead: *windows.DWORD,
-) windows.BOOL;
+) callconv(.winapi) windows.BOOL;
 
 pub extern "kernel32" fn PeekConsoleInputW(
     hConsoleInput: windows.HANDLE,
     lpBuffer: PINPUT_RECORD,
     nLength: windows.DWORD,
     lpNumberOfEventsRead: *windows.DWORD,
-) windows.BOOL;
+) callconv(.winapi) windows.BOOL;
