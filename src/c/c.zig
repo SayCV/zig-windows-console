@@ -7,18 +7,18 @@ pub const WINDOW_BUFFER_SIZE_EVENT = 0x0004;
 pub const MENU_EVENT = 0x0008;
 pub const FOCUS_EVENT = 0x0010;
 
-//pub extern fn GetConsoleOutputCP() c_uint;
-//pub extern fn SetConsoleOutputCP(wCodePageID: c_uint) windows.BOOL;
+//pub extern fn GetConsoleOutputCP() callconv(.winapi) c_uint;
+//pub extern fn SetConsoleOutputCP(wCodePageID: c_uint) callconv(.winapi) windows.BOOL;
 
-pub extern fn SetConsoleMode(hConsoleHandle: windows.HANDLE, dwMode: windows.DWORD) windows.BOOL;
-pub extern fn GetConsoleMode(hConsoleHandle: windows.HANDLE, lpMode: *windows.DWORD) windows.BOOL;
+pub extern fn SetConsoleMode(hConsoleHandle: windows.HANDLE, dwMode: windows.DWORD) callconv(.winapi) windows.BOOL;
+pub extern fn GetConsoleMode(hConsoleHandle: windows.HANDLE, lpMode: *windows.DWORD) callconv(.winapi) windows.BOOL;
 pub extern fn WriteConsoleW(
     hConsoleOutput: windows.HANDLE,
     lpBuffer: [*]const u16,
     nNumberOfCharsToWrite: windows.DWORD,
     lpNumberOfCharsWritten: ?*windows.DWORD,
     lpReserved: ?*anyopaque,
-) windows.BOOL;
+) callconv(.winapi) windows.BOOL;
 
 // Events
 const union_unnamed_248 = extern union {
