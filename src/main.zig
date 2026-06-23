@@ -8,12 +8,12 @@ pub const types = @import("types.zig");
 pub const Event = @import("events.zig").Event;
 
 pub fn getCodepage() c_uint {
-    return windows.kernel32.GetConsoleOutputCP();
+    return c.GetConsoleOutputCP();
 }
 
 pub fn setCodepage(codepage: c_uint) !void {
-    if (windows.kernel32.SetConsoleOutputCP(codepage) == 0) {
-        switch (windows.kernel32.GetLastError()) {
+    if (c.SetConsoleOutputCP(codepage) == .FALSE) {
+        switch (windows.GetLastError()) {
             else => |err| return windows.unexpectedError(err),
         }
     }
@@ -26,13 +26,13 @@ pub const ConsoleApp = struct {
     stdout_handle: windows.HANDLE,
 
     pub fn init() !Self {
-        return Self{ .stdin_handle = try windows.GetStdHandle(windows.STD_INPUT_HANDLE), .stdout_handle = try windows.GetStdHandle(windows.STD_OUTPUT_HANDLE) };
+        return Self{ .stdin_handle = c.GetStdHandle(c.STD_INPUT_HANDLE), .stdout_handle = c.GetStdHandle(c.STD_OUTPUT_HANDLE) };
     }
 
     pub fn getInputMode(self: Self) !types.InputMode {
         var mode: windows.DWORD = undefined;
-        if (c.GetConsoleMode(self.stdin_handle, &mode) == 0) {
-            switch (windows.kernel32.GetLastError()) {
+        if (c.GetConsoleMode(self.stdin_handle, &mode) == .FALSE) {
+            switch (windows.GetLastError()) {
                 else => |err| return windows.unexpectedError(err),
             }
         }
@@ -40,8 +40,8 @@ pub const ConsoleApp = struct {
     }
 
     pub fn setInputMode(self: Self, mode: types.InputMode) !void {
-        if (c.SetConsoleMode(self.stdin_handle, utils.toUnsigned(types.InputMode, mode)) == 0) {
-            switch (windows.kernel32.GetLastError()) {
+        if (c.SetConsoleMode(self.stdin_handle, utils.toUnsigned(types.InputMode, mode)) == .FALSE) {
+            switch (windows.GetLastError()) {
                 else => |err| return windows.unexpectedError(err),
             }
         }
@@ -49,8 +49,8 @@ pub const ConsoleApp = struct {
 
     pub fn getOutputMode(self: Self) !types.OutputMode {
         var mode: windows.DWORD = undefined;
-        if (c.GetConsoleMode(self.stdout_handle, &mode) == 0) {
-            switch (windows.kernel32.GetLastError()) {
+        if (c.GetConsoleMode(self.stdout_handle, &mode) == .FALSE) {
+            switch (windows.GetLastError()) {
                 else => |err| return windows.unexpectedError(err),
             }
         }
@@ -58,8 +58,8 @@ pub const ConsoleApp = struct {
     }
 
     pub fn setOutputMode(self: Self, mode: types.OutputMode) !void {
-        if (c.SetConsoleMode(self.stdout_handle, utils.toUnsigned(types.OutputMode, mode)) == 0) {
-            switch (windows.kernel32.GetLastError()) {
+        if (c.SetConsoleMode(self.stdout_handle, utils.toUnsigned(types.OutputMode, mode)) == .FALSE) {
+            switch (windows.GetLastError()) {
                 else => |err| return windows.unexpectedError(err),
             }
         }
@@ -69,8 +69,8 @@ pub const ConsoleApp = struct {
         var event_count: u32 = 0;
         var input_record = std.mem.zeroes(c.INPUT_RECORD);
 
-        if (c.ReadConsoleInputW(self.stdin_handle, &input_record, 1, &event_count) == 0) {
-            switch (windows.kernel32.GetLastError()) {
+        if (c.ReadConsoleInputW(self.stdin_handle, &input_record, 1, &event_count) == .FALSE) {
+            switch (windows.GetLastError()) {
                 else => |err| return windows.unexpectedError(err),
             }
         }
@@ -83,8 +83,8 @@ pub const ConsoleApp = struct {
         var input_record = std.mem.zeroes(c.INPUT_RECORD);
 
         // Check if there are any input events available
-        if (c.PeekConsoleInputW(self.stdin_handle, &input_record, 1, &event_count) == 0) {
-            switch (windows.kernel32.GetLastError()) {
+        if (c.PeekConsoleInputW(self.stdin_handle, &input_record, 1, &event_count) == .FALSE) {
+            switch (windows.GetLastError()) {
                 else => |err| return windows.unexpectedError(err),
             }
         }
@@ -95,8 +95,8 @@ pub const ConsoleApp = struct {
         }
 
         // Read the input event
-        if (c.ReadConsoleInputW(self.stdin_handle, &input_record, 1, &event_count) == 0) {
-            switch (windows.kernel32.GetLastError()) {
+        if (c.ReadConsoleInputW(self.stdin_handle, &input_record, 1, &event_count) == .FALSE) {
+            switch (windows.GetLastError()) {
                 else => |err| return windows.unexpectedError(err),
             }
         }
@@ -110,10 +110,10 @@ pub const ConsoleApp = struct {
     }
 
     pub fn getScreenBufferInfo(self: Self) !types.ScreenBufferInfo {
-        var bf = std.mem.zeroes(windows.CONSOLE_SCREEN_BUFFER_INFO);
+        var bf = std.mem.zeroes(c.CONSOLE_SCREEN_BUFFER_INFO);
 
-        if (windows.kernel32.GetConsoleScreenBufferInfo(self.stdout_handle, &bf) == 0) {
-            switch (windows.kernel32.GetLastError()) {
+        if (c.GetConsoleScreenBufferInfo(self.stdout_handle, &bf) == 0) {
+            switch (windows.GetLastError()) {
                 else => |err| return windows.unexpectedError(err),
             }
         }

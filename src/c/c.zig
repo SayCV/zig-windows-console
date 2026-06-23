@@ -7,8 +7,41 @@ pub const WINDOW_BUFFER_SIZE_EVENT = 0x0004;
 pub const MENU_EVENT = 0x0008;
 pub const FOCUS_EVENT = 0x0010;
 
-//pub extern fn GetConsoleOutputCP() callconv(.winapi) c_uint;
-//pub extern fn SetConsoleOutputCP(wCodePageID: c_uint) callconv(.winapi) windows.BOOL;
+pub const STD_HANDLE = enum(u32) {
+    INPUT_HANDLE = 4294967286,
+    OUTPUT_HANDLE = 4294967285,
+    ERROR_HANDLE = 4294967284,
+};
+pub const STD_INPUT_HANDLE = STD_HANDLE.INPUT_HANDLE;
+pub const STD_OUTPUT_HANDLE = STD_HANDLE.OUTPUT_HANDLE;
+pub const STD_ERROR_HANDLE = STD_HANDLE.ERROR_HANDLE;
+pub extern "kernel32" fn GetStdHandle(
+    nStdHandle: STD_HANDLE,
+) callconv(.winapi) HANDLE;
+pub const HANDLE = windows.HANDLE;
+
+pub extern "kernel32" fn GetConsoleOutputCP() callconv(.winapi) c_uint;
+pub extern "kernel32" fn SetConsoleOutputCP(wCodePageID: c_uint) callconv(.winapi) windows.BOOL;
+
+pub const SMALL_RECT = extern struct {
+    Left: windows.SHORT,
+    Top: windows.SHORT,
+    Right: windows.SHORT,
+    Bottom: windows.SHORT,
+};
+
+pub const CONSOLE_SCREEN_BUFFER_INFO = extern struct {
+    dwSize: windows.COORD,
+    dwCursorPosition: windows.COORD,
+    wAttributes: windows.WORD,
+    srWindow: SMALL_RECT,
+    dwMaximumWindowSize: windows.COORD,
+};
+
+pub extern "kernel32" fn GetConsoleScreenBufferInfo(
+    hConsoleOutput: windows.HANDLE,
+    lpConsoleScreenBufferInfo: *CONSOLE_SCREEN_BUFFER_INFO,
+) callconv(.winapi) windows.BOOL;
 
 pub extern fn SetConsoleMode(hConsoleHandle: windows.HANDLE, dwMode: windows.DWORD) callconv(.winapi) windows.BOOL;
 pub extern fn GetConsoleMode(hConsoleHandle: windows.HANDLE, lpMode: *windows.DWORD) callconv(.winapi) windows.BOOL;

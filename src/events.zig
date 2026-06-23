@@ -28,7 +28,7 @@ pub const Event = union(enum) {
                             types.Key{ .ascii = ir.Event.KeyEvent.uChar.AsciiChar })
                     else
                         types.Key{ .unicode = ir.Event.KeyEvent.uChar.UnicodeChar },
-                    .is_down = if (ir.Event.KeyEvent.bKeyDown == 0) false else true,
+                    .is_down = if (ir.Event.KeyEvent.bKeyDown == .FALSE) false else true,
                     .control_keys = utils.fromUnsigned(types.ControlKeys, ir.Event.KeyEvent.dwControlKeyState),
                 } };
             },
@@ -60,7 +60,7 @@ pub const Event = union(enum) {
                 return Self{ .menu = ir.Event.MenuEvent.dwCommandId };
             },
             c.FOCUS_EVENT => {
-                return Self{ .focus = if (ir.Event.FocusEvent.bSetFocus == 0) false else true };
+                return Self{ .focus = if (ir.Event.FocusEvent.bSetFocus == .FALSE) false else true };
             },
             else => std.debug.panic("Not implemented: {}!\n", .{ir.EventType}),
         }

@@ -6,7 +6,10 @@ const virtual_keys = v: {
     const list = @embedFile("c/vk_list");
 
     var i: usize = 0;
-    var vks = [_]VirtualKey{std.mem.zeroes(VirtualKey)} * *(std.mem.count(u8, list, "\n") + 1);
+    //var vks = [_]VirtualKey{std.mem.zeroes(VirtualKey)} * *(std.mem.count(u8, list, "\n") + 1);
+    const count = std.mem.count(u8, list, "\n") + 1;
+    var vks: [count]VirtualKey = undefined;
+    @memset(&vks, std.mem.zeroes(VirtualKey));
     var lines = std.mem.splitSequence(u8, list, "\n");
 
     while (lines.next()) |line| {
