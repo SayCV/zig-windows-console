@@ -6,9 +6,9 @@ pub fn main() !void {
     var con = try zwc.ConsoleApp.init();
     var stdout = std.io.getStdOut().writer();
 
-    var before_cp = zwc.getCodepage();
-    var before_input_mode = try con.getInputMode();
-    var before_output_mode = try con.getOutputMode();
+    const before_cp = zwc.getCodepage();
+    const before_input_mode = try con.getInputMode();
+    const before_output_mode = try con.getOutputMode();
 
     try con.setInputMode(zwc.types.InputMode{
         .enable_extended_flags = true, // Does things... docs aren't very clear but do say they should be used with quickedit = false
@@ -30,7 +30,7 @@ pub fn main() !void {
     try zwc.setCodepage(65001);
     try stdout.writeAll("Cool thing: I have UTF-8 support thanks to the 65001 codepage!\n");
 
-    var sbi = try con.getScreenBufferInfo();
+    const sbi = try con.getScreenBufferInfo();
     var w: usize = 0;
     while (w < sbi.viewport_rect.right + 1) : (w += 1) {
         try stdout.writeAll("─");
@@ -39,7 +39,7 @@ pub fn main() !void {
 
     std.debug.print("Move your mouse around and type on your keyboard to see what I do!\n", .{});
     main: while (true) {
-        var event = try con.getEvent();
+        const event = try con.getEvent();
 
         // NOTE: Mouse events don't work in Windows Terminal because Microsoft is slacking
         switch (event) {

@@ -8,11 +8,11 @@ pub const types = @import("types.zig");
 pub const Event = @import("events.zig").Event;
 
 pub fn getCodepage() c_uint {
-    return c.GetConsoleOutputCP();
+    return windows.kernel32.GetConsoleOutputCP();
 }
 
 pub fn setCodepage(codepage: c_uint) !void {
-    if (c.SetConsoleOutputCP(codepage) == 0) {
+    if (windows.kernel32.SetConsoleOutputCP(codepage) == 0) {
         switch (windows.kernel32.GetLastError()) {
             else => |err| return windows.unexpectedError(err),
         }
