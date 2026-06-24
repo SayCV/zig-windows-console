@@ -112,7 +112,7 @@ pub const ConsoleApp = struct {
     pub fn getScreenBufferInfo(self: Self) !types.ScreenBufferInfo {
         var bf = std.mem.zeroes(c.CONSOLE_SCREEN_BUFFER_INFO);
 
-        if (c.GetConsoleScreenBufferInfo(self.stdout_handle, &bf) == 0) {
+        if (c.GetConsoleScreenBufferInfo(self.stdout_handle, &bf) == .FALSE) {
             switch (windows.GetLastError()) {
                 else => |err| return windows.unexpectedError(err),
             }
