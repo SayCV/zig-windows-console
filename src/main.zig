@@ -125,4 +125,12 @@ pub const ConsoleApp = struct {
             .max_window_size = @bitCast(bf.dwMaximumWindowSize),
         };
     }
+
+    pub fn setConsoleTextAttribute(self: Self, attrs: c.CONSOLE_CHARACTER_ATTRIBUTES) !void {
+        if (c.SetConsoleTextAttribute(self.stdout_handle, attrs) == .FALSE) {
+            switch (windows.GetLastError()) {
+                else => |err| return windows.unexpectedError(err),
+            }
+        }
+    }
 };

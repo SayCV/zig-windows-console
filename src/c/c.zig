@@ -38,9 +38,33 @@ pub const CONSOLE_SCREEN_BUFFER_INFO = extern struct {
     dwMaximumWindowSize: windows.COORD,
 };
 
+pub const CONSOLE_CHARACTER_ATTRIBUTES = packed struct(u16) {
+    FOREGROUND_BLUE: u1 = 0,
+    FOREGROUND_GREEN: u1 = 0,
+    FOREGROUND_RED: u1 = 0,
+    FOREGROUND_INTENSITY: u1 = 0,
+    BACKGROUND_BLUE: u1 = 0,
+    BACKGROUND_GREEN: u1 = 0,
+    BACKGROUND_RED: u1 = 0,
+    BACKGROUND_INTENSITY: u1 = 0,
+    COMMON_LVB_LEADING_BYTE: u1 = 0,
+    COMMON_LVB_TRAILING_BYTE: u1 = 0,
+    COMMON_LVB_GRID_HORIZONTAL: u1 = 0,
+    COMMON_LVB_GRID_LVERTICAL: u1 = 0,
+    COMMON_LVB_GRID_RVERTICAL: u1 = 0,
+    _13: u1 = 0,
+    COMMON_LVB_REVERSE_VIDEO: u1 = 0,
+    COMMON_LVB_UNDERSCORE: u1 = 0,
+};
+
 pub extern "kernel32" fn GetConsoleScreenBufferInfo(
     hConsoleOutput: windows.HANDLE,
     lpConsoleScreenBufferInfo: *CONSOLE_SCREEN_BUFFER_INFO,
+) callconv(.winapi) windows.BOOL;
+
+pub extern "kernel32" fn SetConsoleTextAttribute(
+    hConsoleOutput: ?windows.HANDLE,
+    wAttributes: CONSOLE_CHARACTER_ATTRIBUTES,
 ) callconv(.winapi) windows.BOOL;
 
 pub extern fn SetConsoleMode(hConsoleHandle: windows.HANDLE, dwMode: windows.DWORD) callconv(.winapi) windows.BOOL;
