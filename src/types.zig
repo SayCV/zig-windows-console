@@ -1,4 +1,5 @@
 const std = @import("std");
+const c = @import("c/c.zig");
 
 const virtual_keys = v: {
     @setEvalBranchQuota(100000);
@@ -50,9 +51,9 @@ pub const VirtualKey = struct {
     }
 };
 
-pub const Coords = extern struct { x: i16, y: i16 };
+pub const Coords = std.os.windows.COORD; // extern struct { x: i16, y: i16 };
 
-pub const Rect = extern struct { left: i16, top: i16, right: i16, bottom: i16 };
+pub const Rect = c.SMALL_RECT; // extern struct { left: i16, top: i16, right: i16, bottom: i16 };
 
 pub const ScreenBufferInfo = extern struct {
     size: Coords,

@@ -118,11 +118,11 @@ pub const ConsoleApp = struct {
             }
         }
         return types.ScreenBufferInfo{
-            .size = @bitCast(bf.dwSize),
-            .cursor_position = @bitCast(bf.dwCursorPosition),
-            .attributes = @bitCast(bf.wAttributes),
-            .viewport_rect = @bitCast(bf.srWindow),
-            .max_window_size = @bitCast(bf.dwMaximumWindowSize),
+            .size = bf.dwSize,
+            .cursor_position = bf.dwCursorPosition,
+            .attributes = bf.wAttributes,
+            .viewport_rect = bf.srWindow,
+            .max_window_size = bf.dwMaximumWindowSize,
         };
     }
 

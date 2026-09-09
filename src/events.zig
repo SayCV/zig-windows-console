@@ -35,7 +35,7 @@ pub const Event = union(enum) {
             c.MOUSE_EVENT => {
                 const flags = utils.fromUnsigned(types.MouseFlags, ir.Event.MouseEvent.dwEventFlags);
                 return Self{ .mouse = .{
-                    .abs_coords = @bitCast(ir.Event.MouseEvent.dwMousePosition),
+                    .abs_coords = ir.Event.MouseEvent.dwMousePosition,
                     .mouse_buttons = utils.fromUnsigned(types.MouseButtons, ir.Event.MouseEvent.dwButtonState),
                     .mouse_flags = flags,
                     .mouse_scroll_direction = if (flags.mouse_wheeled)
@@ -54,7 +54,7 @@ pub const Event = union(enum) {
                 } };
             },
             c.WINDOW_BUFFER_SIZE_EVENT => {
-                return Self{ .window_buffer_size = @bitCast(ir.Event.WindowBufferSizeEvent.dwSize) };
+                return Self{ .window_buffer_size = ir.Event.WindowBufferSizeEvent.dwSize };
             },
             c.MENU_EVENT => {
                 return Self{ .menu = ir.Event.MenuEvent.dwCommandId };
